@@ -38,7 +38,7 @@ const Todos = props => {
             {isEdit ? <button onClick={handleOnClickSave} type="button">Save</button> 
             : <button onClick={() => setIsEdit(!isEdit)} type="button">Edit</button>
             }
-            <button onClick={() => deleteTodo(value.id)}>Delete</button>
+            <button onClick={(e) => deleteTodo(e, value.id)}>Delete</button>
         </div>
     )
 }

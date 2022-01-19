@@ -4,9 +4,7 @@ import React, { useState } from 'react'
 import Todos from './Todos'
 
 const Todolist = () => {
-    const [state, setState] = useState({
-        todo: '',
-        todolist: [{
+    const [todolist, setTodolist] = useState([{
             id:  1,
             title: 'maghugas',
             status: 'ADD_ITEM'
@@ -15,36 +13,54 @@ const Todolist = () => {
             id:  2,
             title: 'maghilamos',
             status: 'COMPLETED_ITEM'
-        },
-        {
-            id:  3,
-            title: 'Magtooth brush',
-            status: 'DELETED_ITEM'
-        }]
-    })
-
+        }])
     
-    const {todo, todolist} = state
+    // const {todo, todolist} = state
+    
+    const [title, setTitle] = useState('')
+    // const [status, setStatus] = useState('ADD_ITEM')
 
     const handleOnChange = (e) => {
         const {name,value} = e.target
 
-        setState({...state, [name]: value})
+        setTitle(value)
+
+        console.log(name)
+        console.log(value)
     }
  
+    const addedTodo = todolist.filter(todo => todo.status === 'ADD_ITEM' )
+    const completedTodo = todolist.filter(todo => todo.status === 'COMPLETED_ITEM')
     // CREATE
     const createTodo = (e) => {
         e.preventDefault()
-        const list = todolist // current na laman na todo
-       list.push(todo) // current + current todo input
+        const id = Math.floor(Math.random() * 10000) + 1
+        // const newTask = {id, title}
 
-        setState({todo:'', todolist: list}) 
+        const newTask = {
+            id: id,
+            title: title,
+            status: 'ADD_ITEM'
+        } 
+
+        setTodolist([...todolist, newTask])
+        setTitle('')
+
+    //     e.preventDefault(
+    //     const list = todolist // current na laman na todo
+    //    list.push(todo) // current + current todo input
+
+    //     setState({todo:'', todolist: list}) 
         //papasa yung list sa todolist since yun na yung updated
         //todo:'' para ma-clear laman ng input after mag add
     }
 
       // DELETE
-      const deleteTodo = (id) => {
+      const deleteTodo = (e, id) => {
+          e.preventDefault()
+          const newTodos = todolist.filter(todo => todo.id !== id )
+        //   console.log(newTodos)
+          setTodolist(newTodos)
         // const list = todolist // current na laman na todo
         // list.splice(id, 1) // current - current todo input
 
@@ -67,7 +83,7 @@ const Todolist = () => {
 
         const onCheckCompleted = (id, status) => {
             
-            const tempTodos = [...state.todolist];
+            const tempTodos = [...todolist];
             const newTodos = tempTodos.map((todo) => {
                 if(todo.id === id) {
                     todo.status = status;
@@ -75,7 +91,7 @@ const Todolist = () => {
                 }
                 return todo;
             })
-            setState({...state, todolist: newTodos})
+            setTodolist(newTodos)
         }
     return(
         <div className='todolist-container'>
@@ -85,10 +101,14 @@ const Todolist = () => {
                         <hr className='hr-add-item'></hr>
                             <div className='add-wrapper'>
                                 <input type='text' 
-                                name = 'todo'
+                                name = 'title'
                                 placeholder='Add todo list'
-                                value={todo}
-                                onChange={handleOnChange}/>
+                                value={title} 
+                                // value={todoTitle}
+                                onChange={handleOnChange}
+                                // onAdd={}
+                                // onChange={(e) => setTodoTitle(e.target.value)}
+                                />
                                 <button onClick={createTodo}>ADD</button>
                             </div>
                         </div>
@@ -96,9 +116,9 @@ const Todolist = () => {
                         <hr className='hr-todo'></hr>
                         {
                             // display text only todo
-                            todolist.length && todolist.map((value) => {
+                            addedTodo.length > 0 ? 
+                            addedTodo.map((value) => {
 
-                                if(value.status === "ADD_ITEM") {
                                     return <Todos
                                     key={value.id}                      
                                     value={value}
@@ -107,9 +127,10 @@ const Todolist = () => {
                                     onSave={onSave}
                                     onCheckCompleted={onCheckCompleted}
                                     />
-                                }   
-                                          
-                            })  
+      
+                            }
+                            ) 
+                            : 'Nothing todo'
                         }
                     </div>
                     <div className='completed-main action-lbl'> COMPLETED
@@ -117,9 +138,7 @@ const Todolist = () => {
                             <div className='completed-row-wrapper'>
                             {
                             // display text only todo
-                            todolist.length && todolist.map((value) => {
-
-                                if(value.status === "COMPLETED_ITEM") {
+                            completedTodo.length > 0 ? completedTodo.map((value) => {
                                     return <Todos
                                     key={value.id}                      
                                     value={value}
@@ -127,10 +146,10 @@ const Todolist = () => {
                                     // handleOnclickEdit={handleOnclickEdit}
                                     onSave={onSave}
                                     onCheckCompleted={onCheckCompleted}
-                                    />
-                                }   
+                                    /> 
                                           
-                            })  
+                            })
+                            : 'Wala ka pa natatapos'  
                         }
                             </div>
                     </div>
