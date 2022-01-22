@@ -68,10 +68,19 @@ const Todolist = () => {
     }
 
         //UPDATE
-        const onSave = (id, inputValue) => {
-            // const newTodos = [...state.todolist];
-            // newTodos[index] = inputValue;
-            // setState({...state, todolist: [...newTodos]})
+        const onSave = (e, id, inputValue) => {
+
+            e.preventDefault()
+            const tempTodos = [...todolist];
+            const newTodos = tempTodos.map((todo) => {
+                if( todo.id === id){
+                    todo.title = inputValue;
+                    return todo
+                }
+                return todo;
+              })
+            // newTodos[todolist.id] = inputValue;
+            setTodolist(newTodos)
         }
 
         // const arr1 = [1,20,50,100];
@@ -156,9 +165,9 @@ const Todolist = () => {
                 </form>
             </div>
             <div>
-            {/* { todolist.length ?
-                                todolist.map((value, index) => 
-                                   <p>{} {index}</p>) : <span>Nothing todo</span>} */}
+            { todolist.length ?
+                                todolist.map((value) => 
+                                   <p>{value.title}</p>) : <span>Nothing todo</span>}
         </div>
         </div>
 

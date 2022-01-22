@@ -21,9 +21,9 @@ const Todos = props => {
     const [isCompleted, setIsCompleted] = useState(value.status === "COMPLETED_ITEM" ? true : false);
     // console.log(isCheck, 'checkboxInput')
 
-    const handleOnClickSave = () => {
+    const handleOnClickSave = (e) => {
         setIsEdit(false);
-        onSave(value.id, inputValue);
+        onSave(e, value.id, inputValue);
     }
 
     const handleOnCheckCompleted = (e) => {
